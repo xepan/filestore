@@ -13,7 +13,16 @@ class Model_Volume extends \SQL_Model
                 ->mandatory(true)
                 ->sortable(true)
                 ;
-		$this->addField('dirname')
+		$this->addField('dirname_field','dirname')
+                ->caption('Folder')
+                ->hint('You can use absolute path too')
+                ->mandatory(true)
+                ->sortable(true)
+                ->system(true)
+                ;
+
+                $this->addExpression('dirname')
+                ->set($this->dsql()->expr('CONCAT("websites/[0]/",[1])',[$this->app->current_website_name,$this->getElement('dirname_field')]))
                 ->caption('Folder')
                 ->hint('You can use absolute path too')
                 ->mandatory(true)

@@ -110,6 +110,10 @@ class Model_File extends \SQL_Model
     {
         return $q->concat(
             @$m->api->pm->base_path,
+            "websites",
+            "/",
+            $m->app->current_website_name,
+            "/",
             $m->getElement('dirname'),
             "/",
             $m->getElement('filename')
