@@ -9,7 +9,7 @@ class Field_File extends \Field_Reference
         parent::init();
         
         $this->setModel($this->use_model, 'url');
-        $this->display(array('form' => 'xepan/base/upload'));
+        $this->display(array('form' => 'xepan/base/Upload'));
     }
     
     /*
