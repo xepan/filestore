@@ -3,12 +3,13 @@ namespace xepan\filestore;
 class Field_File extends \Field_Reference
 {
     public $use_model = 'xepan/filestore/Model_File';
+    public $deref_field='url';
     
     function init()
     {
         parent::init();
         
-        $this->setModel($this->use_model, 'url');
+        $this->setModel($this->use_model, $this->deref_field);
         $this->display(array('form' => 'xepan/base/Upload'));
     }
     
