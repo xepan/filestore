@@ -14,8 +14,7 @@
     ],
     "source": {
         "url": "git@github.com:xepan/filestore.git",
-        "type": "git",
-        "reference": "origin/master"
+        "type": "git"
     },
     "require": {
         "xepan/atk4": "4.3",
