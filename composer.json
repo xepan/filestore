@@ -12,10 +12,6 @@
             "email": "info@xavoc.com"
         }
     ],
-    "source": {
-        "url": "git@github.com:xepan/filestore.git",
-        "type": "git"
-    },
     "require": {
         "xepan/atk4": "4.3",
         "php": ">=5.3"
