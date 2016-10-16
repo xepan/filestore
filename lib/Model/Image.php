@@ -9,6 +9,12 @@ class Model_Image extends Model_File
     public $default_thumb_width  = 140;
     public $default_thumb_height = 140;
 
+    public $imageMimeType = ['image/png','image/jpg','image/jpeg','image/gif'];
+
+    public $otherThumbUrl = [
+                                "application/pdf"=>"pdf_icon.png",
+                                "application/vnd.oasis.opendocument.presentation"=>"cdr_icon.png"
+                            ];
     function init()
     {
         parent::init();
@@ -33,10 +39,18 @@ class Model_Image extends Model_File
      * @return DSQL
      */
     function getThumbURLExpr()
-    {
-        $m = $this->add($this->file_model_class);
-        $m->addCondition($m->id_field, $this->i->fieldExpr('thumb_file_id'));
-        return $m->fieldQuery('url');
+    {   
+        $mime_type = $this->getMimeType();
+
+
+        if(in_array($mime_type, $this->imageMimeType)){
+            $m = $this->add($this->file_model_class);
+            $m->addCondition($m->id_field, $this->i->fieldExpr('thumb_file_id'));
+            return $m->fieldQuery('url');
+        }else{
+            $thumb_url = $this->otherThumbUrl[$mime_type]?:"thumb_uploaded_image.png";
+            return '"vendor/xepan/filestore/templates/images/'.$thumb_url.'"';
+        }
     }
     
     /**
@@ -49,8 +63,9 @@ class Model_Image extends Model_File
         parent::performImport();
 
         // Now that the original is imported, lets generate thumbnails
-        $this->createThumbnails();
-        
+        if(in_array($this->getMimeType(), $this->imageMimeType)){
+            $this->createThumbnails();
+        }
         return $this;
     }
     

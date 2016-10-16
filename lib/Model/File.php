@@ -357,7 +357,19 @@ class Model_File extends \SQL_Model
         return $this->ref('filestore_type_id')
             ->get('mime_type');
     }
+
+    /**
+     * Return Extension
+     *
+     * @return string
+     */
+    function getExtensionType()
+    {
+        return $this->ref('filestore_type_id')
+            ->get('extension');
+    }
     
+
     /**
      * Perform import
      *
