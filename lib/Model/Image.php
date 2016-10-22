@@ -38,19 +38,30 @@ class Model_Image extends Model_File
      * 
      * @return DSQL
      */
-    function getThumbURLExpr()
+    function getThumbURLExpr($m,$q)
     {   
-        $mime_type = $this->getMimeType();
+        // $mime_type = $m->refSQL('filestore_type_id')->getElement('mime_type');
+        
+        $m = $this->add($this->file_model_class);
+        $m->addCondition($m->id_field, $this->i->fieldExpr('thumb_file_id'));
+        // $original_thumb = $m->fieldQuery('url');
 
-
-        if(in_array($mime_type, $this->imageMimeType)){
-            $m = $this->add($this->file_model_class);
-            $m->addCondition($m->id_field, $this->i->fieldExpr('thumb_file_id'));
-            return $m->fieldQuery('url');
-        }else{
-            $thumb_url = $this->otherThumbUrl[$mime_type]?:"thumb_uploaded_image.png";
-            return '"vendor/xepan/filestore/templates/images/'.$thumb_url.'"';
+        $query ="case ";
+        foreach ($this->imageMimeType as $mime) {
+            $query .= "when ([mime_type])='$mime' THEN ([original_thumb]) "; 
         }
+
+        foreach ($this->otherThumbUrl as $mime=>$img_path) {
+            $query .= "when ([mime_type])= '$mime' THEN (concat('vendor/xepan/filestore/templates/images/','$img_path')) "; 
+        }
+
+        $query .= " END";
+
+        return $q->expr($query,[
+            'mime_type'=>$m->add('xepan/filestore/Model_Type')->addCondition('id',$m->getElement('filestore_type_id'))->fieldQuery('mime_type'),
+            'original_thumb' => $m->fieldQuery('url')
+            ]);
+        
     }
     
     /**
