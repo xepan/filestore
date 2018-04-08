@@ -424,7 +424,7 @@ class Model_File extends \SQL_Model
         if (!$this->policy_soft_delete) {
             $file = $this->getPath();
             if (file_exists($file)) {
-                unlink($file);
+                @unlink($file);
             }
         }
     }
@@ -446,7 +446,11 @@ class Model_File extends \SQL_Model
             
             return $this;
         } else {
-            return parent::delete($id);
+
+            $x = parent::delete($id);
+            while($this->app->db->inTransaction()) $this->app->db->commit();
+            
+            return $x;
         }
     }
 }
