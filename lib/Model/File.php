@@ -438,6 +438,7 @@ class Model_File extends \SQL_Model
      */
     function delete($id=null)
     {
+
         if ($this->policy_soft_delete) {
             if(!is_null($id))$this->load($id);
             if(!$this->loaded())throw $this->exception('Unable to determine which record to delete');
@@ -448,7 +449,7 @@ class Model_File extends \SQL_Model
         } else {
 
             $x = parent::delete($id);
-            while($this->app->db->inTransaction()) $this->app->db->commit();
+            if(isset($this->app->inAction) && $this->app->inAction ) while($this->app->db->inTransaction()) $this->app->db->commit();
             
             return $x;
         }
